@@ -1,0 +1,32 @@
+# Maven and generated files
+**/target/
+*.class
+*.log
+*.tmp
+*.swp
+*.swo
+*~
+# IDEs
+.idea/
+*.iml
+*.ipr
+*.iws
+.classpath
+.project
+.settings/
+.vscode/
+# OS
+.DS_Store
+Thumbs.db
+# Local configuration and credentials
+.env
+.env.*
+!.env.example
+application-local.*
+application-*.local.*
+.mvn/settings.xml
+# Maven Wrapper sources and binaries must remain trackable
+!.mvn/wrapper/maven-wrapper.jar
+
+# Spring integration is kept locally, outside the initial core-only version
+/scoped-logging-spring-boot/
