@@ -34,7 +34,7 @@ assertions allow zero and do not rely on exact wall-clock timing.
 
 ## Commands
 
-Run the core tests (the initial version excludes Spring integration):
+Run core and Spring integration tests:
 
 ```sh
 mvn test

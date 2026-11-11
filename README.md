@@ -9,9 +9,9 @@ scopes; completion restores the parent scope automatically. Java 25 requires no 
 | Artifact | Purpose | Production dependencies |
 | --- | --- | --- |
 | `scoped-logging-core` | Programmatic scopes in plain Java | SLF4J API only |
+| `scoped-logging-spring-boot` | `@LogScope` and automatic configuration | Core, Spring Boot, Spring AOP and AspectJ |
 
-This initial version includes only the core, using `io.github.jcondotta` and version
-`0.1.0-SNAPSHOT`. Spring Boot integration is not included. The root
+Both artifacts use `io.github.jcondotta` and version `0.1.0-SNAPSHOT`. The root
 `scoped-logging` artifact is a parent POM, not a library JAR. Packages remain
 `com.jcondotta.scopedlogging` to preserve the extracted API.
 
@@ -24,7 +24,7 @@ mvn clean verify
 mvn clean install
 ```
 
-This installs the parent POM and the core library JAR into your local Maven
+This installs the parent POM and both library JARs into your local Maven
 repository. These artifacts are **not published to Maven Central**.
 
 ## Plain Java
@@ -101,6 +101,52 @@ only when the key is absent and failure was not explicitly declared.
 
 See the [core README](scoped-logging-core/README.md) for event defaults, reason semantics,
 attribute snapshots, concurrency, and the precise failure-isolation contract.
+
+## Spring Boot
+
+Add the integration artifact; Maven includes the core transitively:
+
+```xml
+<dependency>
+    <groupId>io.github.jcondotta</groupId>
+    <artifactId>scoped-logging-spring-boot</artifactId>
+    <version>0.1.0-SNAPSHOT</version>
+</dependency>
+```
+
+```java
+import com.jcondotta.scopedlogging.LogScope;
+import com.jcondotta.scopedlogging.application.logscope.LogContext;
+import org.springframework.stereotype.Service;
+
+@Service
+public class PostService {
+    private final LogContext context;
+
+    public PostService(LogContext context) {
+        this.context = context;
+    }
+
+    @LogScope("posts.publish")
+    public void publish(String id) {
+        context.with("post.id", id).info("Post published").success();
+    }
+}
+```
+
+Boot discovers `ScopedLoggingAutoConfiguration` without scanning library packages. It supplies
+`ScopedLogContext`, `LogScopeExecutor` with the SLF4J publisher, and `LogScopeAspect`, backing
+off when the corresponding bean type is supplied by the application. To use another publisher,
+provide a `LogScopeExecutor` bean constructed with the same context used by your services.
+
+The aspect uses the target class's logger name. An empty annotation value derives the
+operation as `ClassName.methodName`; `@LogScope(level = LogLevel.DEBUG)` selects a default
+severity (`LogLevel` is in `com.jcondotta.scopedlogging.domain.logging`). All completion,
+reason and failure-isolation behavior is delegated to the core executor.
+
+Calls must pass through a Spring proxy: self-invocation, manually created objects, private
+methods and non-interceptable final methods do not activate scopes. Future/reactive return
+values do not extend the synchronous scope. This integration is tested with Boot 4.1.1.
 
 ## Execution and failure isolation
 

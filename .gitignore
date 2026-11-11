@@ -27,6 +27,3 @@ application-*.local.*
 .mvn/settings.xml
 # Maven Wrapper sources and binaries must remain trackable
 !.mvn/wrapper/maven-wrapper.jar
-
-# Spring integration is kept locally, outside the initial core-only version
-/scoped-logging-spring-boot/

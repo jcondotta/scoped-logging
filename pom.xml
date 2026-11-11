@@ -20,6 +20,7 @@
     <!-- License, project/SCM URLs and publication configuration await approval. -->
     <modules>
         <module>scoped-logging-core</module>
+        <module>scoped-logging-spring-boot</module>
     </modules>
 
     <properties>
