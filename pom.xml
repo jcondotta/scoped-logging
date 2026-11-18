@@ -5,19 +5,40 @@
 
     <groupId>io.github.jcondotta</groupId>
     <artifactId>scoped-logging</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
+    <version>0.1.0-alpha.1</version>
 
     <packaging>pom</packaging>
     <name>Scoped Logging</name>
     <description>One scope. One structured event. Full context.</description>
 
+    <url>https://github.com/jcondotta/scoped-logging</url>
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>https://opensource.org/license/mit</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <scm
+        child.scm.connection.inherit.append.path="false"
+        child.scm.developerConnection.inherit.append.path="false"
+        child.scm.url.inherit.append.path="false">
+
+        <connection>scm:git:https://github.com/jcondotta/scoped-logging.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/jcondotta/scoped-logging.git</developerConnection>
+        <url>https://github.com/jcondotta/scoped-logging</url>
+    </scm>
+
     <developers>
         <developer>
             <id>jcondotta</id>
+            <name>jcondotta</name>
+            <url>https://github.com/jcondotta</url>
         </developer>
     </developers>
 
-    <!-- License, project/SCM URLs and publication configuration await approval. -->
     <modules>
         <module>scoped-logging-core</module>
         <module>scoped-logging-spring-boot</module>
@@ -136,4 +157,98 @@
             </plugins>
         </pluginManagement>
     </build>
+
+    <profiles>
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>3.4.0</version>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-resources-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>include-javadoc-license</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>copy-resources</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>${project.build.directory}/reports/apidocs/META-INF</outputDirectory>
+                                    <resources>
+                                        <resource>
+                                            <directory>${maven.multiModuleProjectDirectory}</directory>
+                                            <includes>
+                                                <include>LICENSE</include>
+                                            </includes>
+                                        </resource>
+                                    </resources>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>3.12.0</version>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>3.2.8</version>
+                        <configuration>
+                            <bestPractices>true</bestPractices>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.sonatype.central</groupId>
+                        <artifactId>central-publishing-maven-plugin</artifactId>
+                        <version>0.12.0</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <publishingServerId>central</publishingServerId>
+                            <autoPublish>false</autoPublish>
+                            <waitUntil>validated</waitUntil>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

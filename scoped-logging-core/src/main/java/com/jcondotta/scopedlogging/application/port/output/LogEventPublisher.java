@@ -4,7 +4,9 @@ import com.jcondotta.scopedlogging.domain.logging.LogEvent;
 
 /**
  * Output port for publishing a completed scope event.
- * When invoked by LogScopeExecutor, RuntimeException and AssertionError are isolated
+ *
+ * <p>When invoked by {@link com.jcondotta.scopedlogging.application.logscope.LogScopeExecutor},
+ * {@link RuntimeException} and {@link AssertionError} are isolated
  * and diagnosed once through System.Logger on a best-effort basis. Other errors,
  * including VirtualMachineError, ThreadDeath and LinkageError, propagate and can override
  * the business outcome. Recoverable failures in the diagnostic fallback are also isolated.
@@ -18,5 +20,13 @@ import com.jcondotta.scopedlogging.domain.logging.LogEvent;
  */
 @FunctionalInterface
 public interface LogEventPublisher {
+    /**
+     * Attempts to publish one completed event according to the implementation's delivery policy.
+     * The event's attribute map is unmodifiable, but values are retained by reference.
+     * Implementations that defer delivery must capture mutable values before returning
+     * if a stable snapshot is required.
+     *
+     * @param event completed event supplied by the executor; never null
+     */
     void publish(LogEvent event);
 }

@@ -11,7 +11,7 @@ scopes; completion restores the parent scope automatically. Java 25 requires no 
 | `scoped-logging-core` | Programmatic scopes in plain Java | SLF4J API only |
 | `scoped-logging-spring-boot` | `@LogScope` and automatic configuration | Core, Spring Boot, Spring AOP and AspectJ |
 
-Both artifacts use `io.github.jcondotta` and version `0.1.0-SNAPSHOT`. The root
+Both artifacts use `io.github.jcondotta` and version `0.1.0-alpha.1`. The root
 `scoped-logging` artifact is a parent POM, not a library JAR. Packages remain
 `com.jcondotta.scopedlogging` to preserve the extracted API.
 
@@ -33,7 +33,7 @@ repository. These artifacts are **not published to Maven Central**.
 <dependency>
     <groupId>io.github.jcondotta</groupId>
     <artifactId>scoped-logging-core</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
+    <version>0.1.0-alpha.1</version>
 </dependency>
 ```
 
@@ -110,7 +110,7 @@ Add the integration artifact; Maven includes the core transitively:
 <dependency>
     <groupId>io.github.jcondotta</groupId>
     <artifactId>scoped-logging-spring-boot</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
+    <version>0.1.0-alpha.1</version>
 </dependency>
 ```
 
@@ -179,7 +179,14 @@ commands, [VALIDATION.md](VALIDATION.md) for historical extraction evidence, and
 
 ## License and publication
 
-The license is pending owner approval; `LICENSE` is a status placeholder, not a license grant.
+Licensed under the [MIT License](LICENSE).
+
 The source repository is [jcondotta/scoped-logging](https://github.com/jcondotta/scoped-logging).
-Before publishing to Maven Central, approve the license, configure project/SCM metadata,
-attach sources and Javadocs, and configure signing and Central publication.
+The `release` Maven profile builds sources and Javadocs, signs artifacts, and uploads them
+for validation in the Central Portal. Publication remains manual. See
+[PUBLISHING.md](PUBLISHING.md) for local verification, credentials and release steps.
+
+## Release preparation
+
+The `release` profile prepares Maven Central artifacts and uploads them for validation in
+the Central Portal. It does not publish them automatically. See [PUBLISHING.md](PUBLISHING.md).
